@@ -17,7 +17,6 @@
 package com.provisionmod.like_camera;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -26,19 +25,25 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 
@@ -49,34 +54,69 @@ public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 	LayoutInflater controlInflater = null;
 	static Bitmap bitmap;
 	static int mode;
+	ImageButton like_btn, hate_btn;
+	LinearLayout menu_bar;
+	DisplayMetrics displayMetrics;
+	boolean focusing = false;
 
 	/** Called when the activity is first created. */
-	@Override
+	AutoFocusCallback mAutoFocus = new AutoFocusCallback() {
+		public void onAutoFocus(boolean success, Camera camera) {
+			// mShutter.setEnabled(success);
+		}
+	};
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		displayMetrics = getResources().getDisplayMetrics();
+		menu_bar = (LinearLayout) findViewById(R.id.menu_bar);
+		menu_bar.setVisibility(View.GONE);
+		like_btn = (ImageButton) findViewById(R.id.like_btn);
+		hate_btn = (ImageButton) findViewById(R.id.hate_btn);
+		OnTouchListener btnTouch=new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				if (focusing)
+					return false;
+				focusing = true;
+				camera.autoFocus(mAutoFocus);
+				return false;
+			}
+		};
+		like_btn.setOnTouchListener(btnTouch);
+
+		LayoutParams lp = menu_bar.getLayoutParams();
+		lp.width = (int) ((double) (displayMetrics.heightPixels) / 480 * 640);
+		lp.height = LayoutParams.WRAP_CONTENT;
+		menu_bar.setLayoutParams(lp); // í”„ë¦¬ë·° í¬ê¸° ì„¤ì •
+
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		surfaceView = (SurfaceView) findViewById(R.id.surfaceview);
+		lp = surfaceView.getLayoutParams();
+		lp.width = (int) ((double) (displayMetrics.heightPixels) / 480 * 640);
+		lp.height = displayMetrics.heightPixels;
+		surfaceView.setLayoutParams(lp); // í”„ë¦¬ë·° í¬ê¸° ì„¤ì •
 		surfaceHolder = surfaceView.getHolder();
-		surfaceHolder.addCallback(this); // SurfaceHolder.CallbackÀ» ¼³Á¤ÇÔÀ¸·Î½á
-											// Surface°¡ »ı¼º/¼Ò¸êµÇ¾úÀ½À» ¾Ë ¼ö ÀÖÀ½
+		surfaceHolder.addCallback(this); // SurfaceHolder.Callbackì„ ì„¤ì •í•¨ìœ¼ë¡œì¨
+											// Surfaceê°€ ìƒì„±/ì†Œë©¸ë˜ì—ˆìŒì„ ì•Œ ìˆ˜ ìˆìŒ
 		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
-	public void Like(View target) { // ÁÁ¾Æ¿ä ¹öÆ°
+	public void Like(View target) { // ì¢‹ì•„ìš” ë²„íŠ¼
 		camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-		mode = 0; // ¸ğµå¸¦ 0(ÁÁ¾Æ¿ä)À¸·Î ¹Ù²Ù°í Ä¸ÃÄ
+		mode = 0; // ëª¨ë“œë¥¼ 0(ì¢‹ì•„ìš”)ìœ¼ë¡œ ë°”ê¾¸ê³  ìº¡ì³
+		focusing=false;
 	}
 
-	public void Hate(View target) { // ½È¾î¿ä ¹öÆ°
+	public void Hate(View target) { // ì‹«ì–´ìš” ë²„íŠ¼
 		camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-		mode = 1; // ¸ğµå¸¦ 1(½È¾î¿ä)·Î ¹Ù²Ù°í Ä¸ÃÄ
+		mode = 1; // ëª¨ë“œë¥¼ 1(ì‹«ì–´ìš”)ë¡œ ë°”ê¾¸ê³  ìº¡ì³
 	}
 
 	@Override
-	public void surfaceCreated(SurfaceHolder holder) { // Ä«¸Ş¶ó Preview¸¦ Ç¥½ÃÇÒ À§Ä¡ ¼³Á¤
+	public void surfaceCreated(SurfaceHolder holder) { // ì¹´ë©”ë¼ Previewë¥¼ í‘œì‹œí•  ìœ„ì¹˜ ì„¤ì •
 		camera = Camera.open();
 		try {
 			camera.setPreviewDisplay(holder);
@@ -88,14 +128,17 @@ public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) { // Ä«¸Ş¶ó Preview ½ÃÀÛ 
+			int height) { // ì¹´ë©”ë¼ Preview ì‹œì‘
 		if (previewing) {
 			camera.stopPreview();
 		}
 
 		try {
+			// TODO
 			Camera.Parameters p = camera.getParameters();
-			p.setPreviewSize(width, height);
+			p.setPreviewSize(
+					(int) ((double) (displayMetrics.heightPixels) / 480 * 640),
+					displayMetrics.heightPixels);
 			camera.setParameters(p);
 			camera.setPreviewDisplay(surfaceHolder);
 			camera.startPreview();
@@ -106,16 +149,22 @@ public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 	}
 
 	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) { // Ä«¸Ş¶ó ÀÚ¿ø ¹İ³³
+	public void surfaceDestroyed(SurfaceHolder holder) { // ì¹´ë©”ë¼ ìì› ë°˜ë‚©
 		camera.stopPreview();
 		camera.release();
 		camera = null;
 		previewing = false;
 	}
 
-	public boolean Capture(Camera.PictureCallback jpegHandler) { // ÂïÀº ÀÌ¹ÌÁö¸¦ ÀúÀåÀ» À§ÇØ Callback Å¬·¡½º ±¸Çö 
+	public boolean Capture(Camera.PictureCallback jpegHandler) { // ì°ì€ ì´ë¯¸ì§€ë¥¼ ì €ì¥ì„
+																	// ìœ„í•´
+																	// Callback
+																	// í´ë˜ìŠ¤ êµ¬í˜„
 		if (camera != null) {
-			camera.takePicture(null, null, jpegHandler); //Ä«¸Ş¶ó°¡ º¸°íÀÖ´Â ÀÌ¹ÌÁö¸¦ ÃÔ¿µÀ» À§ÇØ takePicture¸Ş¼­µå¸¦ È£Ãâ 
+			camera.takePicture(null, null, jpegHandler); // ì¹´ë©”ë¼ê°€ ë³´ê³ ìˆëŠ” ì´ë¯¸ì§€ë¥¼ ì´¬ì˜ì„
+															// ìœ„í•´
+															// takePictureë©”ì„œë“œë¥¼
+															// í˜¸ì¶œ
 			return true;
 		} else {
 			return false;
@@ -136,10 +185,12 @@ public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 			if (data != null) {
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inSampleSize = 2;
-				bitmap = BitmapFactory.decodeByteArray(data, 0,
-						data.length); // bitmap º¯¼ö¿¡ »çÁøÀ» ÀúÀå
+				bitmap = BitmapFactory.decodeByteArray(data, 0, data.length); // bitmap
+																				// ë³€ìˆ˜ì—
+																				// ì‚¬ì§„ì„
+																				// ì €ì¥
 				Intent i = new Intent(LikeCamera.this, PhotoViewer.class);
-				startActivityForResult(i, 0); // Ä¸ÃÄ ÈÄ »çÁø ºä¾î ¶ç¿ò
+				startActivityForResult(i, 0); // ìº¡ì³ í›„ ì‚¬ì§„ ë·°ì–´ ë„ì›€
 			}
 		}
 	};
@@ -148,11 +199,11 @@ public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 		super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == RESULT_OK) {
 			if (intent.getExtras().getInt("R") == 1)
-				Save(bitmap); // »çÁø ºä¾î¿¡¼­ È®ÀÎÀ» ´©¸£¸é »çÁø ÀúÀå
+				Save(bitmap); // ì‚¬ì§„ ë·°ì–´ì—ì„œ í™•ì¸ì„ ëˆ„ë¥´ë©´ ì‚¬ì§„ ì €ì¥
 		}
 	}
 
-	private void Save(Bitmap bm) { // »çÁø ÀúÀå
+	private void Save(Bitmap bm) { // ì‚¬ì§„ ì €ì¥
 		try {
 			File path = new File("/sdcard/LikeCamera");
 
@@ -162,8 +213,19 @@ public class LikeCamera extends Activity implements SurfaceHolder.Callback {
 
 			FileOutputStream out = new FileOutputStream("/sdcard/LikeCamera/"
 					+ System.currentTimeMillis() + ".jpeg");
-			bm.compress(Bitmap.CompressFormat.JPEG, 75, out);
-		} catch (FileNotFoundException e) {
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+		} catch (Exception e) {
 		}
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu_bar.setVisibility(menu_bar.getVisibility() == View.GONE ? View.VISIBLE
+				: View.GONE);
+		return false;
+	}
+
+	public void showMenu(View target) {
+		menu_bar.setVisibility(menu_bar.getVisibility() == View.GONE ? View.VISIBLE
+				: View.GONE);
 	}
 }

@@ -6,8 +6,8 @@
 
     <SurfaceView
         android:id="@+id/surfaceview"
-        android:layout_width="640px"
-        android:layout_height="480px" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -30,7 +30,7 @@
             <ImageButton
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
-                android:background="#00000000"
+                android:background="@drawable/button_pressed"
                 android:src="@drawable/gallery" />
 
             <ImageView
@@ -47,6 +47,7 @@
             android:orientation="vertical" >
 
             <ImageButton
+                android:id="@+id/like_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dip"
@@ -55,6 +56,7 @@
                 android:src="@drawable/like_bg" />
 
             <ImageButton
+                android:id="@+id/hate_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dip"
@@ -77,9 +79,10 @@
                 android:src="@drawable/divider_horizontal" />
 
             <ImageButton
+                android:onClick="showMenu"
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
-                android:background="#00000000"
+                android:background="@drawable/button_pressed"
                 android:src="@drawable/more" />
 
         </LinearLayout>
@@ -87,6 +90,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/menu_bar"
         android:layout_width="640px"
         android:layout_height="70dip"
         android:layout_alignParentBottom="true"
@@ -97,34 +101,25 @@
 
         <Button
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="70dip"
             android:layout_weight="0.33"
-            android:background="#303030"
+            android:background="@drawable/menu_bg"
             android:text="동영상 촬영"
             android:textColor="#ffffff" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/divider_vertical" />
-
         <Button
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="70dip"
             android:layout_weight="0.33"
-            android:background="#303030"
+            android:background="@drawable/menu_bg"
             android:text="환경설정"
             android:textColor="#ffffff" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/divider_vertical" />
         
         <Button
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="70dip"
             android:layout_weight="0.33"
-            android:background="#303030"
+            android:background="@drawable/menu_bg"
             android:text="정보"
             android:textColor="#ffffff" />
     </LinearLayout>
