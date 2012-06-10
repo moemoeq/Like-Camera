@@ -47,17 +47,20 @@ public final class R {
         public static final int upload=0x7f02001e;
     }
     public static final class id {
-        public static final int hate_btn=0x7f060002;
-        public static final int like_btn=0x7f060001;
-        public static final int menu_bar=0x7f060004;
-        public static final int more=0x7f060003;
-        public static final int photo=0x7f060005;
-        public static final int question=0x7f060006;
-        public static final int surfaceview=0x7f060000;
+        public static final int hate_btn=0x7f060003;
+        public static final int info=0x7f060000;
+        public static final int info_layout=0x7f060006;
+        public static final int like_btn=0x7f060002;
+        public static final int menu_bar=0x7f060005;
+        public static final int more=0x7f060004;
+        public static final int photo=0x7f060007;
+        public static final int question=0x7f060008;
+        public static final int surfaceview=0x7f060001;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
-        public static final int viewer=0x7f030001;
+        public static final int info=0x7f030000;
+        public static final int main=0x7f030001;
+        public static final int viewer=0x7f030002;
     }
     public static final class string {
         public static final int app_name=0x7f050001;

@@ -31,6 +31,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/button_pressed"
+                android:onClick="showGallery"
                 android:src="@drawable/gallery" />
 
             <ImageView
@@ -119,8 +120,26 @@
             android:layout_height="70dip"
             android:layout_weight="0.33"
             android:background="@drawable/menu_bg"
+            android:onClick="Info"
             android:text="정보"
             android:textColor="#ffffff" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/info_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/btn_pressed"
+            android:onClick="CancelInfo" />
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/info" />
+    </RelativeLayout>
 
 </RelativeLayout>
