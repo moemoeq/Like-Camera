@@ -64,7 +64,7 @@
                 android:onClick="Hate"
                 android:src="@drawable/hate_bg" />
         </LinearLayout>
-
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dip"
@@ -77,16 +77,15 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dip"
                 android:src="@drawable/divider_horizontal" />
-
+
             <ImageButton
-                android:onClick="showMenu"
+                android:id="@+id/more"
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/button_pressed"
+                android:onClick="showMenu"
                 android:src="@drawable/more" />
-
         </LinearLayout>
-
     </FrameLayout>
 
     <LinearLayout
@@ -114,7 +113,7 @@
             android:background="@drawable/menu_bg"
             android:text="환경설정"
             android:textColor="#ffffff" />
-        
+
         <Button
             android:layout_width="fill_parent"
             android:layout_height="70dip"

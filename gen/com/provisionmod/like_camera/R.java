@@ -43,14 +43,16 @@ public final class R {
         public static final int no_flash=0x7f02001a;
         public static final int question_bg=0x7f02001b;
         public static final int toast=0x7f02001c;
-        public static final int upload=0x7f02001d;
+        public static final int toggle_pressed=0x7f02001d;
+        public static final int upload=0x7f02001e;
     }
     public static final class id {
         public static final int hate_btn=0x7f060002;
         public static final int like_btn=0x7f060001;
-        public static final int menu_bar=0x7f060003;
-        public static final int photo=0x7f060004;
-        public static final int question=0x7f060005;
+        public static final int menu_bar=0x7f060004;
+        public static final int more=0x7f060003;
+        public static final int photo=0x7f060005;
+        public static final int question=0x7f060006;
         public static final int surfaceview=0x7f060000;
     }
     public static final class layout {

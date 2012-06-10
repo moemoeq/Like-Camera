@@ -35,6 +35,7 @@ public class PhotoViewer extends Activity {
 		Intent intent = new Intent();
 		intent.putExtra("R", 1);
 		this.setResult(RESULT_OK, intent);
+		LikeCamera.mode=-1;
 		finish();
 	}
 
@@ -42,6 +43,7 @@ public class PhotoViewer extends Activity {
 		Intent intent = new Intent();
 		intent.putExtra("R", 0);
 		this.setResult(RESULT_OK, intent);
+		LikeCamera.mode=-1;
 		finish();
 	}
 }
